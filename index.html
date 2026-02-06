@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mithun's Ultimate Periodic Table</title>
+    <!-- Detailed Inter font weights for premium typography -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='none' stroke='%233b82f6' stroke-width='4' /><circle cx='50' cy='50' r='10' fill='%23eab308' /><path d='M20,50 a30,15 0 1,0 60,0 a30,15 0 1,0 -60,0' stroke='%23ec4899' stroke-width='2' fill='none' transform='rotate(45 50 50)' /><path d='M20,50 a30,15 0 1,0 60,0 a30,15 0 1,0 -60,0' stroke='%238b5cf6' stroke-width='2' fill='none' transform='rotate(-45 50 50)' /></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="cosmos-bg"></div>
+    <div class="ambient-light"></div>
+
+    <!-- HAMBURGER BUTTON (Top Right) -->
+    <button id="hamburgerBtn" class="hamburger-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- FULL SCREEN MENU OVERLAY -->
+    <div id="menuOverlay" class="menu-overlay hidden">
+        <button id="closeMenuBtn" class="close-menu-btn">&times;</button>
+        
+        <div class="menu-content">
+            <h1 class="menu-title">Control Center</h1>
+            
+            <div class="menu-section">
+                <h3>Search</h3>
+                <input type="text" id="searchInput" class="menu-input" placeholder="Find element...">
+            </div>
+
+            <div class="menu-section">
+                <h3>Temperature</h3>
+                <div class="temp-control-menu">
+                    <span id="tempValue">298 K</span>
+                    <input type="range" id="tempSlider" min="0" max="6000" value="298" step="10">
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <h3>Filter Group</h3>
+                <div class="filter-grid">
+                    <button class="nav-btn active" data-category="all">All</button>
+                    <button class="nav-btn" data-category="alkali metal">Alkali Metals</button>
+                    <button class="nav-btn" data-category="alkaline earth metal">Alkaline Earth</button>
+                    <button class="nav-btn" data-category="transition metal">Transition</button>
+                    <button class="nav-btn" data-category="post-transition metal">Post-Transition</button>
+                    <button class="nav-btn" data-category="metalloid">Metalloids</button>
+                    <button class="nav-btn" data-category="reactive nonmetal">Non-Metals</button>
+                    <button class="nav-btn" data-category="noble gas">Noble Gases</button>
+                    <button class="nav-btn" data-category="lanthanoid">Lanthanoids</button>
+                    <button class="nav-btn" data-category="actinoid">Actinoids</button>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <button id="gameBtn" class="action-btn full-width">Play Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="table-container">
+      <!-- MAIN HEADER -->
+      <div class="header-content">
+        <div class="logo-container">
+          <div class="logo-tile">
+            <span class="logo-number">118</span>
+            <span class="logo-symbol">Pt</span>
+            <span class="logo-name">Premium</span>
+          </div>
+          <div class="logo-text">
+            <h1>ELEMENTS</h1>
+            <p>MITHUN'S ULTIMATE EDITION</p>
+          </div>
+        </div>
+
+        <div class="controls-container">
+            <button id="toggleBuilder" class="control-btn lab-btn">
+                🧪 LAB
+            </button>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search elements...">
+            </div>
+        </div>
+      </div>
+
+      <div class="periodic-grid" id="periodicGrid">
+        <!-- Elements will be injected here via JS -->
+      </div>
+
+      <div class="lanthanoids-grid" id="lanthanoidsGrid">
+        <!-- Lanthanides injected here -->
+      </div>
+
+      <div class="actinoids-grid" id="actinoidsGrid">
+        <!-- Actinides injected here -->
+      </div>
+      
+      <footer class="app-footer">
+          Built by Mithun 2026 all rights reserved
+      </footer>
+    </main>
+
+    <!-- Element Detail Modal -->
+    <div id="elementModal" class="modal-overlay hidden">
+      <div class="modal-content glass-panel">
+        <button class="close-modal">&times;</button>
+
+        <div class="modal-layout">
+          <div class="atom-visual-container">
+            <div id="atomCanvas"></div>
+            <!-- CSS/JS 3D Atom -->
+            <div class="electron-stats">
+              <div class="stat">
+                <span>Shells:</span> <span id="modalShells">2,8,1</span>
+              </div>
+              <div class="stat">
+                <span>Config:</span> <span id="modalConfig">[Ne] 3s1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="element-info">
+            <h2 class="element-title" id="modalName">Hydrogen</h2>
+            <div class="element-meta">
+              <span class="element-number" id="modalNumber">1</span>
+              <span class="element-symbol" id="modalSymbol">H</span>
+              <span class="element-mass" id="modalMass">1.008 u</span>
+            </div>
+
+            <p class="element-desc" id="modalDesc">
+              Hydrogen is the lightest element...
+            </p>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <h3>Uses</h3>
+                <ul id="modalUses"></ul>
+              </div>
+              <div class="info-card">
+                <h3>Fun Fact</h3>
+                <p id="modalFact"></p>
+              </div>
+            </div>
+
+            <div class="quiz-section mt-4">
+              <h3>Quick Quiz</h3>
+              <p id="quizQuestion"></p>
+              <div class="quiz-options" id="quizOptions"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameModal" class="modal-overlay hidden">
+        <div class="modal-content glass-panel" style="max-height: 500px; text-align: center; align-items: center;">
+            <button class="close-modal" id="closeGame">&times;</button>
+            <!-- ... game content ... -->
+            <div id="gameContent">
+                <!-- ... existing ... -->
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPOUND BUILDER PANEL (Advanced) -->
+    <div id="compoundPanel" class="compound-panel hidden">
+        <div class="panel-header">
+            <h3>CHEMISTRY LAB</h3>
+            <button id="closeBuilder" class="close-btn">&times;</button>
+        </div>
+        <div class="builder-area">
+            <div class="drop-zone" id="dropZone">
+                <span class="placeholder-text">Drag Elements Here</span>
+                <div class="atom-container" id="atomContainer"></div>
+            </div>
+            <div class="result-display">
+                <div id="compoundResult" class="compound-name">H₂O</div>
+                <button id="clearBuilder" class="action-btn">Clear</button>
+                <button id="mixBuilder" class="action-btn glow">Mix</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal-overlay hidden">
+        <div class="modal-content glass-panel" style="max-height: 500px; text-align: center; align-items: center;">
+            <button class="close-modal" id="closeGame">&times;</button>
+            <h2 style="font-family: var(--font-display); color: var(--neon-purple); margin-bottom: 20px;">GUESS THE ELEMENT</h2>
+            <div id="gameContent">
+                <p id="gameClue" style="font-size: 1.5rem; margin-bottom: 30px;">Clue loading...</p>
+                <div id="gameOptions" class="controls-container" style="justify-content: center;"></div>
+                <p id="gameFeedback" style="margin-top: 20px; height: 20px;"></p>
+                <p style="margin-top: 20px; color: var(--text-dim);">Score: <span id="gameScore">0</span> | High Score: <span id="highScore">0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Cursor Effect -->
+    <div class="cursor-glow"></div>
+
+    <script src="elements.js"></script>
+    <script src="compounds.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
