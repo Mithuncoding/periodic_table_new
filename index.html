@@ -15,56 +15,7 @@
     <div class="cosmos-bg"></div>
     <div class="ambient-light"></div>
 
-    <!-- HAMBURGER BUTTON (Top Right) -->
-    <button id="hamburgerBtn" class="hamburger-btn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-    </button>
 
-    <!-- FULL SCREEN MENU OVERLAY -->
-    <div id="menuOverlay" class="menu-overlay hidden">
-        <button id="closeMenuBtn" class="close-menu-btn">&times;</button>
-        
-        <div class="menu-content">
-            <h1 class="menu-title">Control Center</h1>
-            
-            <div class="menu-section">
-                <h3>Search</h3>
-                <input type="text" id="searchInput" class="menu-input" placeholder="Find element...">
-            </div>
-
-            <div class="menu-section">
-                <h3>Temperature</h3>
-                <div class="temp-control-menu">
-                    <span id="tempValue">298 K</span>
-                    <input type="range" id="tempSlider" min="0" max="6000" value="298" step="10">
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <h3>Filter Group</h3>
-                <div class="filter-grid">
-                    <button class="nav-btn active" data-category="all">All</button>
-                    <button class="nav-btn" data-category="alkali metal">Alkali Metals</button>
-                    <button class="nav-btn" data-category="alkaline earth metal">Alkaline Earth</button>
-                    <button class="nav-btn" data-category="transition metal">Transition</button>
-                    <button class="nav-btn" data-category="post-transition metal">Post-Transition</button>
-                    <button class="nav-btn" data-category="metalloid">Metalloids</button>
-                    <button class="nav-btn" data-category="reactive nonmetal">Non-Metals</button>
-                    <button class="nav-btn" data-category="noble gas">Noble Gases</button>
-                    <button class="nav-btn" data-category="lanthanoid">Lanthanoids</button>
-                    <button class="nav-btn" data-category="actinoid">Actinoids</button>
-                </div>
-            </div>
-
-            <div class="menu-section">
-                <button id="gameBtn" class="action-btn full-width">Play Quiz</button>
-            </div>
-        </div>
-    </div>
 
     <main class="table-container">
       <!-- MAIN HEADER -->
