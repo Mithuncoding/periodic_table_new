@@ -86,6 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     oscillator.start();
                     oscillator.stop(audioCtx.currentTime + 0.05);
                     break;
+                case 'hover':
+                    // Very subtle tick for hover - super short and quiet
+                    oscillator.frequency.value = 2000;
+                    oscillator.type = 'sine';
+                    gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.02);
+                    break;
             }
         } catch(e) {
             // Audio not supported - silently fail
@@ -313,11 +322,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation();
             } else {
                 openModal(el);
+                playSound('click');
             }
         });
         
-        // Smart Grouping Hover
-        div.addEventListener('mouseenter', () => highlightFamily(el.group, el.period));
+        // Smart Grouping Hover with sound
+        div.addEventListener('mouseenter', () => {
+            highlightFamily(el.group, el.period);
+            playSound('hover');
+        });
         div.addEventListener('mouseleave', clearHighlight);
 
         return div;
