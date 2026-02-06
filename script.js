@@ -172,14 +172,29 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="element-name">${el.name}</span>
         `;
 
-        // Make Draggable for Builder
+        // Make Draggable for Builder (Desktop)
         div.draggable = true;
         div.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('symbol', el.symbol);
             e.dataTransfer.setData('number', el.number);
         });
 
-        div.addEventListener('click', () => openModal(el));
+        // Click handler - smart behavior
+        div.addEventListener('click', (e) => {
+            // If Lab mode is active, add to mix instead of opening modal
+            const builderPanel = document.querySelector('.builder-panel');
+            const isLabOpen = builderPanel && !builderPanel.classList.contains('hidden');
+            
+            if (isLabOpen && typeof addAtomToMix === 'function') {
+                addAtomToMix(el.symbol);
+                // Provide visual feedback
+                div.style.transform = 'scale(0.9)';
+                setTimeout(() => div.style.transform = '', 150);
+                e.stopPropagation();
+            } else {
+                openModal(el);
+            }
+        });
         
         // Smart Grouping Hover
         div.addEventListener('mouseenter', () => highlightFamily(el.group, el.period));
