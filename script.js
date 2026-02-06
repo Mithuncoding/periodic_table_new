@@ -181,15 +181,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Click handler - smart behavior
         div.addEventListener('click', (e) => {
-            // If Lab mode is active, add to mix instead of opening modal
-            const builderPanel = document.querySelector('.builder-panel');
-            const isLabOpen = builderPanel && !builderPanel.classList.contains('hidden');
+            // Check if Lab panel is open using ID (correct selector)
+            const labPanel = document.getElementById('compoundPanel');
+            const isLabOpen = labPanel && !labPanel.classList.contains('hidden');
             
-            if (isLabOpen && typeof addAtomToMix === 'function') {
-                addAtomToMix(el.symbol);
-                // Provide visual feedback
+            if (isLabOpen) {
+                // Add to Lab mix
+                const symbol = el.symbol;
+                const atomContainer = document.getElementById('atomContainer');
+                const resultDisplay = document.getElementById('compoundResult');
+                
+                // Track recipe (use window to make it accessible)
+                window.currentRecipe = window.currentRecipe || {};
+                window.currentRecipe[symbol] = (window.currentRecipe[symbol] || 0) + 1;
+                
+                // Create visual atom
+                const atom = document.createElement('div');
+                atom.className = 'mini-atom';
+                atom.innerText = symbol;
+                atom.style.background = 'var(--accent-blue)';
+                atomContainer.appendChild(atom);
+                
+                // Hide placeholder
+                const placeholder = document.querySelector('.placeholder-text');
+                if (placeholder) placeholder.style.display = 'none';
+                
+                // Update result
+                if (resultDisplay) {
+                    resultDisplay.innerText = "Ready to Mix...";
+                    resultDisplay.style.color = "rgba(255,255,255,0.5)";
+                }
+                
+                // Visual feedback
                 div.style.transform = 'scale(0.9)';
-                setTimeout(() => div.style.transform = '', 150);
+                div.style.background = 'rgba(16, 185, 129, 0.3)';
+                setTimeout(() => {
+                    div.style.transform = '';
+                    div.style.background = '';
+                }, 200);
+                
                 e.stopPropagation();
             } else {
                 openModal(el);
@@ -407,10 +437,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(clearBtn) {
         clearBtn.addEventListener('click', () => {
-            currentRecipe = {};
+            window.currentRecipe = {};
             atomContainer.innerHTML = '';
-            document.querySelector('.placeholder-text').style.display = 'block';
-            resultDisplay.innerText = "H₂O";
+            const placeholder = document.querySelector('.placeholder-text');
+            if (placeholder) placeholder.style.display = 'block';
+            resultDisplay.innerText = "Tap elements to add...";
             resultDisplay.style.color = "#fff";
         });
     }
@@ -419,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mixBtn.addEventListener('click', () => {
              // Use compounds.js helper
              if (typeof checkCompound === 'function') {
-                 const result = checkCompound(currentRecipe);
+                 const result = checkCompound(window.currentRecipe || {});
                  if (result) {
                      resultDisplay.innerText = `${result.name} (${result.formula})`;
                      resultDisplay.style.color = "#4ade80"; // Bright Green
