@@ -269,10 +269,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Scientific Controls ---
     function setupScientificControls() {
+        // Null check - tempSlider might not exist if menu was removed
+        if (!tempSlider) return;
+        
         tempSlider.addEventListener('input', (e) => {
             const temp = parseInt(e.target.value);
             state.temperature = temp;
-            tempValue.innerText = `${temp} K`;
+            if (tempValue) tempValue.innerText = `${temp} K`;
             updateElementStates(temp);
         });
     }
