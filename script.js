@@ -5,8 +5,95 @@ document.addEventListener('DOMContentLoaded', () => {
         currentFilter: 'all',
         favorites: JSON.parse(localStorage.getItem('favorites')) || [],
         gridRendered: false,
-        temperature: 298 // Kelvin (Room Temp)
+        temperature: 298, // Kelvin (Room Temp)
+        soundEnabled: true
     };
+
+    // --- SOUND EFFECTS SYSTEM (Web Audio API) ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+    
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+    
+    function playSound(type = 'click') {
+        if (!state.soundEnabled) return;
+        try {
+            initAudio();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            switch(type) {
+                case 'click':
+                    oscillator.frequency.value = 800;
+                    oscillator.type = 'sine';
+                    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.1);
+                    break;
+                case 'success':
+                    oscillator.frequency.value = 523.25; // C5
+                    oscillator.type = 'sine';
+                    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    oscillator.start();
+                    setTimeout(() => {
+                        const osc2 = audioCtx.createOscillator();
+                        const gain2 = audioCtx.createGain();
+                        osc2.connect(gain2);
+                        gain2.connect(audioCtx.destination);
+                        osc2.frequency.value = 659.25; // E5
+                        osc2.type = 'sine';
+                        gain2.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                        osc2.start();
+                        osc2.stop(audioCtx.currentTime + 0.3);
+                    }, 100);
+                    oscillator.stop(audioCtx.currentTime + 0.3);
+                    break;
+                case 'error':
+                    oscillator.frequency.value = 200;
+                    oscillator.type = 'sawtooth';
+                    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.2);
+                    break;
+                case 'whoosh':
+                    oscillator.frequency.value = 400;
+                    oscillator.type = 'sine';
+                    oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.15);
+                    break;
+                case 'pop':
+                    oscillator.frequency.value = 1200;
+                    oscillator.type = 'sine';
+                    gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.05);
+                    break;
+            }
+        } catch(e) {
+            // Audio not supported - silently fail
+        }
+    }
+    
+    // Make playSound globally accessible
+    window.playSound = playSound;
 
     // --- DOM Elements ---
     const periodicGrid = document.getElementById('periodicGrid');
@@ -201,6 +288,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 atom.innerText = symbol;
                 atom.style.background = 'var(--accent-blue)';
                 atomContainer.appendChild(atom);
+                
+                // Play sound
+                playSound('pop');
                 
                 // Hide placeholder
                 const placeholder = document.querySelector('.placeholder-text');
@@ -446,6 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (placeholder) placeholder.style.display = 'block';
             resultDisplay.innerText = "Tap elements to add...";
             resultDisplay.style.color = "#fff";
+            playSound('whoosh');
         });
     }
 
@@ -462,10 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
                      // Animation on container
                      atomContainer.style.transform = "scale(1.1)";
                      setTimeout(() => atomContainer.style.transform = "scale(1)", 200);
+                     playSound('success');
                  } else {
                      resultDisplay.innerText = "Unknown Compound";
                      resultDisplay.style.color = "#f87171"; // Red
                      resultDisplay.style.textShadow = "none";
+                     playSound('error');
                  }
              } else {
                  console.error("compounds.js not loaded");

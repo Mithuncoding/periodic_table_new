@@ -1185,16 +1185,116 @@ body {
     border: 1px solid rgba(255,255,255,0.3);
 }
 
-/* Footer */
+/* === CLOSE MODAL BUTTON === */
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 300;
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.close-modal:hover {
+    background: rgba(239, 68, 68, 0.8);
+    transform: rotate(90deg) scale(1.1);
+    border-color: rgba(239, 68, 68, 0.5);
+}
+
+.close-modal:active {
+    transform: scale(0.95);
+}
+
+/* === PREMIUM FOOTER === */
 .app-footer {
     margin-top: 60px;
-    margin-bottom: 20px;
-    color: var(--text-tertiary);
-    font-size: 0.8rem;
+    margin-bottom: 30px;
+    padding: 20px 30px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.app-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(50%); }
+}
+
+.footer-brand {
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 4s ease infinite;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    opacity: 0.6;
-    font-weight: 300;
+}
+
+@keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.footer-tagline {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    margin-top: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+.footer-atoms {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 12px;
+}
+
+.footer-atom {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.footer-atom:nth-child(1) { background: #3b82f6; animation-delay: 0s; }
+.footer-atom:nth-child(2) { background: #8b5cf6; animation-delay: 0.3s; }
+.footer-atom:nth-child(3) { background: #ec4899; animation-delay: 0.6s; }
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.5); opacity: 1; }
 }
 
 
