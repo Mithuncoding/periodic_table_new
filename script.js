@@ -813,23 +813,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateModalContent(el) {
-        // Elements from basic data might not have summaries
-        const safeDesc = el.summary ? el.summary[state.learnLevel] : 
-                        `No specific ${state.learnLevel} description available for ${el.name} yet.`;
+        // Safe fallback for missing data
+        const getSummary = () => {
+            if (el.summary && el.summary[state.learnLevel]) {
+                return el.summary[state.learnLevel];
+            }
+            // Fallback to any available summary level
+            if (el.summary) {
+                return el.summary.beginner || el.summary.intermediate || el.summary.advanced || '';
+            }
+            // Ultimate fallback
+            return `${el.name} is element ${el.number} with symbol ${el.symbol}. Phase: ${el.phase || 'Unknown'}.`;
+        };
+        
+        const safeDesc = getSummary();
         
         // Add Audio Button next to name
         const nameHeader = document.getElementById('modalName');
-        nameHeader.innerHTML = `${el.name} <button class="audio-btn" onclick="speakElementName('${el.name}')" title="Pronounce">🔊</button>`;
-        // Note: inline onclick needs function in global scope or attached. 
-        // Since this is inside DOMContentLoaded, random function won't be global.
-        // We need to attach listener cleanly or expose function.
-        // Better:
+        nameHeader.innerHTML = `${el.name} <button class="audio-btn" title="Pronounce">🔊</button>`;
         const btn = nameHeader.querySelector('.audio-btn');
         if(btn) btn.onclick = (e) => { e.stopPropagation(); speakElementName(el.name); };
 
         document.getElementById('modalNumber').innerText = `No. ${el.number}`;
         document.getElementById('modalSymbol').innerText = el.symbol;
-        document.getElementById('modalMass').innerText = el.atomic_mass + ' u';
+        document.getElementById('modalMass').innerText = (el.atomic_mass || 'Unknown') + ' u';
         document.getElementById('modalDesc').innerText = safeDesc;
         
         // Extended Data Injection
